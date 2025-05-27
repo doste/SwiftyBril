@@ -12,9 +12,11 @@ public enum Type {
     indirect case Parameterized(Type)
 }
 
+// I'd like for the field 'args' to keep maintain its insertion order, that's why I use a MapVector instead of a Swift's Dictionary.
+
 public struct Function {
     let name: String
-    let args: [String : Type]?              // An optional list of arguments, which consist of a name and a type. Missing args is the same as an empty list.
+    let args: MapVector<String, Type>     // // An optional list of arguments, which consist of a name and a type. Missing args is the same as an empty list.
     let type: Type?                       // Optionally, the function’s return type, if any.
 
     // TODO: Should we delete this field and only have basicBlocks?
@@ -27,7 +29,7 @@ extension Function {
     // Set the basicBlocks field of Function
     public mutating func buildBasicBlocks() {
         
-        var currentBlock = BasicBlock()
+        var currentBlock = BasicBlock(asPartOfFunction: self)
 
         for instr in self.instrs {
             switch instr {
@@ -150,13 +152,41 @@ extension Function {
     }
     
     
+    
     public func toString() -> String {
-        var result: String = "@\(self.name) {\n"
+        var result: String = "@\(self.name)"
+        
+        if !self.args.isEmpty {
+            result += "("
+            
+            for (i, (argName, argType)) in self.args.enumerated() {
+                result += "\(argName):"
+                
+                switch argType {
+                    case .Primitive(let primValue):
+                        result += " \(primValue)"
+                    case .Parameterized(let paramValue):
+                        result += " \(paramValue)"   // TODO: fix this.
+                }
+                
+                if i < self.args.count - 1 {
+                    result += ", "
+                }
+            }
+            result += ")"
+        }
+        result += " {\n"
+        
+        
         for basicBlock in self.basicBlocks {
             result += basicBlock.toString()
         }
         result += "}\n"
         return result
+    }
+    
+    public func hasArguments() -> Bool {
+        return self.args.count > 0
     }
 
 }

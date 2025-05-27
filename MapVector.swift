@@ -47,6 +47,11 @@ public struct MapVector<K: Hashable, V> : Sequence {
         }
         return keys
     }
+    
+    public var isEmpty: Bool {
+        return vector.isEmpty
+    }
+    
 }
 
 func isValidIndexInVector<T>(vector: [T], index: Int) -> Bool {
@@ -115,10 +120,6 @@ extension MapVector {
         map.removeAll()
     }
     
-    public func isEmpty() -> Bool {
-        return vector.isEmpty
-    }
-    
     // Returns the value that was removed, or nil if the key was not present in the dictionary.
     public mutating func removeValue(forKey key: K) -> V? {
         if !self.contains(key) {
@@ -141,6 +142,19 @@ extension MapVector {
         self.map.removeValue(forKey: key)
         
         return removedValue
+    }
+    
+    // TODO: Learn how to do this propertly (should be: func enumerated() -> EnumeratedSequence<Self>)
+    public func enumerated() -> Array<(Int, (K, V))> {
+        var enumeration : Array<(Int, (K, V))> = []
+        
+        enumeration.reserveCapacity(self.vector.count)
+        
+        for (index, keyValuePair) in self.vector.enumerated() {
+            enumeration.append((index, (keyValuePair.key, keyValuePair.value)))
+        }
+        
+        return enumeration
     }
 }
 

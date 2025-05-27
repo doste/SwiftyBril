@@ -29,9 +29,9 @@ func buildCfg(brilProgramAsJson: Data) {
                 print("After local value numbering:")
                 print(fun.toString())
                 
-                fun.trivialDeadCodeElimination()
-                print("After DCE:")
-                print(fun.toString())
+                //fun.trivialDeadCodeElimination()
+                //print("After DCE:")
+                //print(fun.toString())
                 
                 
                 //print("There are \(fun.basicBlocks.count) in total")
@@ -46,6 +46,7 @@ func buildCfg(brilProgramAsJson: Data) {
 }
 
 
+// TODO: Change how we input the program. Better to just open read a file where the program is.
 
 func main() {
     var inputProgram: Data

@@ -10,15 +10,17 @@ import Foundation
 public struct BasicBlock {
     var name: String
     var instrs: [InstructionOrLabel]
+    var function: Function             // Function containing this block.
     
-    var succesors: [String]            // We will identify the succesors by their name
+    var succesors: [String]            // We will identify the succesors by their name.
 }
 
 extension BasicBlock: Equatable {
     
-    init() {
+    init(asPartOfFunction function: Function) {
         self.name = String()
         self.instrs = [InstructionOrLabel]()
+        self.function = function
         self.succesors = [String]()
     }
     

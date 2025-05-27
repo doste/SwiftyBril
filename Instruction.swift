@@ -12,6 +12,11 @@ public enum InstructionOrLabel {
     case Label(String)
 }
 
+enum IntOrBoolean {
+    case int(Int?)
+    case bool(Bool?)
+}
+
 public struct Instruction {
     var op: String              //the opcode that determines what the instruction does.
 //Depending on the opcode, the instruction might also have:
@@ -20,7 +25,8 @@ public struct Instruction {
     var args: [String]?         // the arguments to the operation. These are names of variables.
     let funcs: [String]?        // any names of functions referenced by the instruction.
     let labels: [String]?       // any label names referenced by the instruction.
-    var value: Int?             // a number or boolean: the value, for a constant.
+    //var value: Int?             // a number or boolean: the value, for a constant.
+    var value: IntOrBoolean?
 }
 
 
@@ -47,11 +53,15 @@ extension Instruction {
     }
     
     public func isArithmeticOp(ofKind: String) -> Bool {
-        return ofKind == self.op
+        return self.isArithmeticOp() && ofKind == self.op
     }
     
     public func isComparisonOp() -> Bool {
         return ["eq", "lt", "le", "gt", "ge"].contains(self.op)
+    }
+    
+    public func isComparisonOp(ofKind: String) -> Bool {
+        return self.isComparisonOp() && ofKind == self.op
     }
     
     public func isLogicOp() -> Bool {
@@ -89,10 +99,12 @@ extension Instruction {
                 } else if isConstOp() { // A Constant must have a 'value', which is the literal value for the constant.
                     assert(self.value != nil)
                     assert(self.type != nil)
-                    if self.type == "int" {
-                        instrStr += " \(self.value!);\n"
-                    } else if self.type == "bool" {
-                         if self.value! == 1 {
+                    
+                    switch self.value! {
+                    case .int(let intVal):
+                        instrStr += " \(intVal!);\n"
+                    case .bool(let booleanVal):
+                        if booleanVal == true {
                              instrStr += " true;\n"
                          } else {
                              instrStr += " false;\n"
@@ -105,7 +117,6 @@ extension Instruction {
                 } else if isIdOp() {
                     
                     if (self.args == nil) {
-                        //print(">>> \(self.dest!)")
                         instrStr += " >>\n"
                     } else {
                         instrStr += " \(self.args![0]);\n"
@@ -173,6 +184,27 @@ extension Instruction {
         return newInstruction
     }
     
+    
+    func replaceInstr(toConstValue: IntOrBoolean) -> Instruction {
+        var newInstruction = self
+    
+        switch toConstValue {
+            case .int(let intConst):
+                newInstruction.op = "const"
+                newInstruction.args?.removeAll()
+                newInstruction.value = IntOrBoolean.int(intConst)
+                newInstruction.type = "int"
+            case .bool(let boolConst):
+                newInstruction.op = "const"
+                newInstruction.args?.removeAll()
+                newInstruction.value = IntOrBoolean.bool(boolConst)
+                newInstruction.type = "bool"
+        }
+        
+        return newInstruction
+    }
+    
+    /*
     func replaceInstr(toConstValue: Int) -> Instruction {
         var newInstruction = self
     
@@ -182,7 +214,7 @@ extension Instruction {
         newInstruction.type = "int"
         
         return newInstruction
-    }
+    }*/
     
     func replaceInstr(withCopyOfVar: String) -> Instruction {
         var newInstruction = self
