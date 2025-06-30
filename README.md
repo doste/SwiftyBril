@@ -111,3 +111,20 @@ swift run SwiftyBril --dce --lvn --graph /Path/To/rename-fold.json | dot -Tpdf -
 The resulting CFG would look like this:
 
 ![alt text](https://github.com/doste/SwiftyBril/blob/main/Images/RenameFoldOptCFG.jpeg "Rename Fold Optimized CFG")
+
+Another way to look at the generated bril program, would be by running:
+
+```
+swift run SwiftyBril --dce --lvn --print /Path/To/rename-fold.json
+```
+
+The standard output would show:
+
+```
+@main {
+    mul1: int = const 0;
+    add1: int = const 4;
+    print mul1;
+    print add1;
+}
+```
