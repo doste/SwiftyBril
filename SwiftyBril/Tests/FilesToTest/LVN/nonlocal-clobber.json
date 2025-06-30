@@ -1,0 +1,41 @@
+{
+  "functions": [
+    {
+      "instrs": [
+        {
+          "dest": "x",
+          "op": "const",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "label": "lb"
+        },
+        {
+          "args": [
+            "x"
+          ],
+          "dest": "y",
+          "op": "id",
+          "type": "int"
+        },
+        {
+          "args": [
+            "x",
+            "x"
+          ],
+          "dest": "x",
+          "op": "add",
+          "type": "int"
+        },
+        {
+          "args": [
+            "y"
+          ],
+          "op": "print"
+        }
+      ],
+      "name": "main"
+    }
+  ]
+}

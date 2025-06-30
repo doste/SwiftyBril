@@ -1,0 +1,4 @@
+@main {
+    copy1: int = const 4;
+    print copy1;
+}
