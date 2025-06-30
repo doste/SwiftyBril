@@ -1,7 +1,7 @@
 
 
 Implementations for Cornell's [CS 6120: Advanced Compilers self-guided course](https://www.cs.cornell.edu/courses/cs6120/2020fa/self-guided/)
-), in Swift.
+, in Swift.
 
 
 ## Usage
@@ -18,6 +18,7 @@ swift run SwiftyBril [--dce] [--lvn] [--graph] [--debug] [--print] <bril_program
 ```
 
 The command line options `--dce` and `--lvn` are to apply optimizations that remove dead code and perform local value numbering, respectively.
+
 The `--graph` option prints the control flow graph of the program in dot format, which can be used to visualize it using tools like `dot`. For example, you can pipe the output to ` | dot -Tpdf -o cfg.pdf`.
 
 The `--debug` option is to show debug information.
@@ -26,7 +27,7 @@ Finally, with `--print` we print to standard output the bril program (transforme
 
 Also, there are a couple of tests to run. They are loosely based on the ["official" tests]( https://github.com/sampsyo/bril/tree/main/examples/test).
 
-To run them, just type:
+To run them:
 ```
 swift test
 ```
@@ -112,7 +113,7 @@ The resulting CFG would look like this:
 
 ![alt text](https://github.com/doste/SwiftyBril/blob/main/Images/RenameFoldOptCFG.jpeg "Rename Fold Optimized CFG")
 
-Another way to look at the generated bril program, would be by running:
+Another way to look at the generated bril program would be by running:
 
 ```
 swift run SwiftyBril --dce --lvn --print /Path/To/rename-fold.json
